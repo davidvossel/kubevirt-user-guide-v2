@@ -1,0 +1,338 @@
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100   1) Installation
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100   2) ------------
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100   3) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100   4) KubeVirt is a virtualization add-on to Kubernetes and this guide assumes
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100   5) that a Kubernetes cluster is already installed.
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100   6) 
+6507d25d administration/intro.adoc (Marek Libra        2019-08-23 13:31:18 +0200   7) If installed on OKD, the web console is extended for management of virtual machines.
+5c6e2e28 administration/intro.adoc (Marek Libra        2019-08-23 13:14:21 +0200   8) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100   9) Requirements
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  10) ~~~~~~~~~~~~
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  11) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  12) A few requirements need to be met before you can begin:
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  13) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  14) * https://kubernetes.io[Kubernetes] cluster
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  15) (https://github.com/openshift/origin[OpenShift], Tectonic)
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  16) * `kubectl` client utility
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  17) * `git`
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  18) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  19) Minimum Cluster Requirements
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  20) ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  21) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  22) Kubernetes 1.10 or later is required to run KubeVirt.
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  23) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  24) In addition it can be that feature gates need to be opened.
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  25) 
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100  26) Cluster Configuration
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100  27) ^^^^^^^^^^^^^^^^^^^^^
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100  28) 
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100  29) The Kubernetes apiserver needs to be configured to allow privileged pods since
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100  30) we run a privileged Daemon Set on every node. The required flag is
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100  31) `--allow-privileged=true`.
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100  32) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  33) Runtime
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  34) +++++++
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  35) 
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100  36) KubeVirt is currently supported on the following container runtimes:
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  37) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  38) * docker
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  39) * crio (with runv)
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  40) 
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100  41) Other container runtimes, which do not use virtualization features, should work
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100  42) too. However, they are not tested.
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100  43) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  44) Virtualization support
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  45) ^^^^^^^^^^^^^^^^^^^^^^
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  46) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  47) There are several distributions of Kubernetes, you need to decide on one
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  48) and deploy it.
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  49) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  50) Hardware with virtualization support is recommended. You can use
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  51) virt-host-validate to ensure that your hosts are capable of running
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  52) virtualization workloads:
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  53) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  54) [source,bash]
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  55) ----
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  56) $ virt-host-validate qemu
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  57)   QEMU: Checking for hardware virtualization                                 : PASS
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  58)   QEMU: Checking if device /dev/kvm exists                                   : PASS
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  59)   QEMU: Checking if device /dev/kvm is accessible                            : PASS
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  60)   QEMU: Checking if device /dev/vhost-net exists                             : PASS
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  61)   QEMU: Checking if device /dev/net/tun exists                               : PASS
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  62) ...
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  63) ----
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  64) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  65) Software emulation
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  66) ++++++++++++++++++
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  67) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  68) If hardware virtualization is not available, then a
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  69) https://github.com/kubevirt/kubevirt/blob/master/docs/software-emulation.md[software
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  70) emulation fallback] can be enabled using:
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  71) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  72) ....
+18c528ba administration/intro.adoc (Marc Sluiter       2019-01-14 14:46:10 +0100  73) $ kubectl create namespace kubevirt
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  74) $ kubectl create configmap -n kubevirt kubevirt-config \
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  75)     --from-literal debug.useEmulation=true
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  76) ....
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  77) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  78) This ConfigMap needs to be created before deployment or the
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  79) virt-controller deployment has to be restarted.
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  80) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  81) Hugepages support
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  82) ^^^^^^^^^^^^^^^^^
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  83) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  84) For hugepages support you need at least Kubernetes version `1.9`.
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  85) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  86) Enable feature-gate
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  87) +++++++++++++++++++
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  88) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  89) To enable hugepages on Kubernetes, check the
+cdd845d5 administration/intro.adoc (Noriyuki Kazusawa  2019-04-15 23:14:14 +0900  90) https://kubernetes.io/docs/tasks/manage-hugepages/scheduling-hugepages/[official
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  91) documentation].
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  92) 
+6507d25d administration/intro.adoc (Marek Libra        2019-08-23 13:31:18 +0200  93) To enable hugepages on OKD, check the
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  94) https://docs.openshift.org/3.9/scaling_performance/managing_hugepages.html#huge-pages-prerequisites[official
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  95) documentation].
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  96) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  97) Pre-allocate hugepages on a node
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  98) ++++++++++++++++++++++++++++++++
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100  99) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 100) To pre-allocate hugepages on boot time, you will need to specify
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 101) hugepages under kernel boot parameters `hugepagesz=2M hugepages=64` and
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 102) restart your machine.
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 103) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 104) You can find more about hugepages under
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 105) https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt[official
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 106) documentation].
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 107) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 108) Cluster side add-on deployment
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 109) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 110) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 111) Core components
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 112) ^^^^^^^^^^^^^^^
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 113) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 114) Once Kubernetes is deployed, you will need to deploy the KubeVirt
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 115) add-on.
+18c528ba administration/intro.adoc (Marc Sluiter       2019-01-14 14:46:10 +0100 116) 
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 117) The installation uses the KubeVirt operator, which manages lifecycle of all KubeVirt core components:
+18c528ba administration/intro.adoc (Marc Sluiter       2019-01-14 14:46:10 +0100 118) 
+18c528ba administration/intro.adoc (Marc Sluiter       2019-01-14 14:46:10 +0100 119) [source,bash]
+18c528ba administration/intro.adoc (Marc Sluiter       2019-01-14 14:46:10 +0100 120) ----
+29c6e53d administration/intro.adoc (Fabian Deutsch     2019-09-18 09:29:23 +0200 121) # Deploy the KubeVirt operator
+b106836d administration/intro.adoc (Fabian Deutsch     2019-12-20 11:14:53 +0100 122) $ kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/v0.24.0/kubevirt-operator.yaml
+29c6e53d administration/intro.adoc (Fabian Deutsch     2019-09-18 09:29:23 +0200 123) # Create the KubeVirt CR (instance deployment request)
+b106836d administration/intro.adoc (Fabian Deutsch     2019-12-20 11:14:53 +0100 124) $ kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/v0.24.0/kubevirt-cr.yaml
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 125) # wait until all KubeVirt components is up
+476c48eb administration/intro.adoc (Marc Sluiter       2019-08-01 10:34:10 +0200 126) $ kubectl -n kubevirt wait kv kubevirt --for condition=Available
+18c528ba administration/intro.adoc (Marc Sluiter       2019-01-14 14:46:10 +0100 127) ----
+476c48eb administration/intro.adoc (Marc Sluiter       2019-08-01 10:34:10 +0200 128) _____________________________
+476c48eb administration/intro.adoc (Marc Sluiter       2019-08-01 10:34:10 +0200 129) Note: Prior to release v0.20.0 the condition for the `kubectl wait` command was named "Ready" instead of "Available"
+476c48eb administration/intro.adoc (Marc Sluiter       2019-08-01 10:34:10 +0200 130) _____________________________
+18c528ba administration/intro.adoc (Marc Sluiter       2019-01-14 14:46:10 +0100 131) 
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 132) All new components will be deployed under the `kubevirt` namespace:
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 133) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 134) [source,bash]
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 135) ----
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 136) kubectl get pods -n kubevirt
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 137) NAME                                           READY     STATUS        RESTARTS   AGE
+18c528ba administration/intro.adoc (Marc Sluiter       2019-01-14 14:46:10 +0100 138) virt-api-6d4fc3cf8a-b2ere                      1/1       Running       0          1m
+18c528ba administration/intro.adoc (Marc Sluiter       2019-01-14 14:46:10 +0100 139) virt-controller-5d9fc8cf8b-n5trt               1/1       Running       0          1m
+18c528ba administration/intro.adoc (Marc Sluiter       2019-01-14 14:46:10 +0100 140) virt-handler-vwdjx                             1/1       Running       0          1m
+18c528ba administration/intro.adoc (Marc Sluiter       2019-01-14 14:46:10 +0100 141) ...
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 142) ----
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 143) 
+c6e0701f administration/intro.adoc (Jeremy Rogers      2019-06-21 15:09:27 -0400 144) Restricting virt-handler DaemonSet
+c6e0701f administration/intro.adoc (Jeremy Rogers      2019-06-21 15:09:27 -0400 145) ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+c6e0701f administration/intro.adoc (Jeremy Rogers      2019-06-21 15:09:27 -0400 146) 
+c6e0701f administration/intro.adoc (Jeremy Rogers      2019-06-21 15:09:27 -0400 147) You can patch the `virt-handler` DaemonSet post-deployment to restrict it to a specific subset of nodes with
+c6e0701f administration/intro.adoc (Jeremy Rogers      2019-06-21 15:09:27 -0400 148) a nodeSelector. For example, to restrict the DaemonSet to only nodes with the "region=primary" label:
+c6e0701f administration/intro.adoc (Jeremy Rogers      2019-06-21 15:09:27 -0400 149) 
+c6e0701f administration/intro.adoc (Jeremy Rogers      2019-06-21 15:09:27 -0400 150) [source, bash]
+c6e0701f administration/intro.adoc (Jeremy Rogers      2019-06-21 15:09:27 -0400 151) ----
+c6e0701f administration/intro.adoc (Jeremy Rogers      2019-06-21 15:09:27 -0400 152) kubectl patch ds/virt-handler -n kubevirt -p '{"spec": {"template": {"spec": {"nodeSelector": {"region": "primary"}}}}}'
+c6e0701f administration/intro.adoc (Jeremy Rogers      2019-06-21 15:09:27 -0400 153) ----
+c6e0701f administration/intro.adoc (Jeremy Rogers      2019-06-21 15:09:27 -0400 154) 
+6507d25d administration/intro.adoc (Marek Libra        2019-08-23 13:31:18 +0200 155) Deploying on OKD
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 156) ~~~~~~~~~~~~~~~~~~~~~~
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 157) 
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 158) The following
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 159) https://docs.openshift.com/container-platform/3.11/admin_guide/manage_scc.html[SCC]
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 160) needs to be added prior KubeVirt deployment:
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 161) 
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 162) [source,bash]
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 163) ----
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 164) $ oc adm policy add-scc-to-user privileged -n kubevirt -z kubevirt-operator
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 165) ----
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 166) 
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 167) Once privileges are granted, the KubeVirt can be deployed as described above.
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 168) 
+6507d25d administration/intro.adoc (Marek Libra        2019-08-23 13:31:18 +0200 169) Web user interface on OKD
+5c6e2e28 administration/intro.adoc (Marek Libra        2019-08-23 13:14:21 +0200 170) ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+5c6e2e28 administration/intro.adoc (Marek Libra        2019-08-23 13:14:21 +0200 171) 
+6507d25d administration/intro.adoc (Marek Libra        2019-08-23 13:31:18 +0200 172) No additional steps are required to extend OKD's web console for KubeVirt.
+5c6e2e28 administration/intro.adoc (Marek Libra        2019-08-23 13:14:21 +0200 173) 
+5c6e2e28 administration/intro.adoc (Marek Libra        2019-08-23 13:14:21 +0200 174) The virtualization extension is automatically enabled when KubeVirt deployment is detected.
+5c6e2e28 administration/intro.adoc (Marek Libra        2019-08-23 13:14:21 +0200 175) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 176) Client side `virtctl` deployment
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 177) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 178) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 179) Basic VirtualMachineInstance operations can be performed with the stock
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 180) `kubectl` utility. However, the `virtctl` binary utility is required to
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 181) use advanced features such as:
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 182) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 183) * Serial and graphical console access
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 184) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 185) It also provides convenience commands for:
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 186) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 187) * Starting and stopping VirtualMachineInstances
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 188) * Live migrating VirtualMachineInstances
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 189) 
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 190) There are two ways to get it:
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 191) 
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 192) * the most recent version of the tool can be retrieved from the
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 193) https://github.com/kubevirt/kubevirt/releases[official release page]
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 194) * it can be installed as a `kubectl` plugin using https://krew.dev/[krew]
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 195) 
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 196) ===== Install `virtctl` with `krew`
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 197) 
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 198) It is required to https://github.com/kubernetes-sigs/krew/#installation[install `krew` plugin manager] beforehand.
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 199) If `krew` is installed, `virtctl` can be installed via `krew`:
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 200) 
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 201) [source,bash]
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 202) ----
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 203) $ kubectl krew install virt
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 204) ----
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 205) 
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 206) Then `virtctl` can be used as a kubectl plugin. For a list of available commands run:
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 207) 
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 208) [source,bash]
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 209) ----
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 210) $ kubectl virt help
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 211) ----
+cb843f99 administration/intro.adoc (Daniel Hiller      2019-06-13 16:54:19 +0200 212) 
+785ec307 administration/intro.adoc (Daniel Hiller      2019-06-18 22:09:01 +0200 213) Every occurrence throughout this guide of
+785ec307 administration/intro.adoc (Daniel Hiller      2019-06-18 22:09:01 +0200 214) 
+785ec307 administration/intro.adoc (Daniel Hiller      2019-06-18 22:09:01 +0200 215) [source,bash]
+785ec307 administration/intro.adoc (Daniel Hiller      2019-06-18 22:09:01 +0200 216) ----
+785ec307 administration/intro.adoc (Daniel Hiller      2019-06-18 22:09:01 +0200 217) $ ./virtctl <command>...
+785ec307 administration/intro.adoc (Daniel Hiller      2019-06-18 22:09:01 +0200 218) ----
+785ec307 administration/intro.adoc (Daniel Hiller      2019-06-18 22:09:01 +0200 219) 
+785ec307 administration/intro.adoc (Daniel Hiller      2019-06-18 22:09:01 +0200 220) should then be read as
+785ec307 administration/intro.adoc (Daniel Hiller      2019-06-18 22:09:01 +0200 221) 
+785ec307 administration/intro.adoc (Daniel Hiller      2019-06-18 22:09:01 +0200 222) [source,bash]
+785ec307 administration/intro.adoc (Daniel Hiller      2019-06-18 22:09:01 +0200 223) ----
+785ec307 administration/intro.adoc (Daniel Hiller      2019-06-18 22:09:01 +0200 224) $ kubectl virt <command>...
+785ec307 administration/intro.adoc (Daniel Hiller      2019-06-18 22:09:01 +0200 225) ----
+785ec307 administration/intro.adoc (Daniel Hiller      2019-06-18 22:09:01 +0200 226) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 227) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 228) From Service Catalog as an APB
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 229) ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 230) 
+6507d25d administration/intro.adoc (Marek Libra        2019-08-23 13:31:18 +0200 231) You can find KubeVirt in the OKD Service Catalog and install it
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 232) from there. In order to do that please follow the documentation in the
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 233) https://github.com/ansibleplaybookbundle/kubevirt-apb[KubeVirt APB
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 234) repository].
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 235) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 236) Deploying from Source
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 237) ~~~~~~~~~~~~~~~~~~~~~
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 238) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 239) See the
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 240) https://github.com/kubevirt/kubevirt/blob/master/docs/getting-started.md[Developer
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 241) Getting Started Guide] to understand how to build and deploy KubeVirt
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 242) from source.
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 243) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 244) Installing network plugins (optional)
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 245) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 246) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 247) KubeVirt alone does not bring any additional network plugins, it just
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 248) allows user to utilize them. If you want to attach your VMs to multiple
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 249) networks (Multus CNI) or have full control over L2 (OVS CNI), you need
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 250) to deploy respective network plugins. For more information, refer to
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 251) https://github.com/kubevirt/ovs-cni/blob/master/docs/deployment-on-arbitrary-cluster.md[OVS
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 252) CNI installation guide].
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 253) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 254) ______________________________________________________________________________________________________________________________________________________
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 255) Note: KubeVirt Ansible
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 256) https://github.com/kubevirt/kubevirt-ansible/tree/master/playbooks#network[network
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 257) playbook] installs these plugins by default.
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 258) ______________________________________________________________________________________________________________________________________________________
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 259) 
+edca2cbd administration/intro.adoc (Marek Libra        2019-02-06 15:25:51 +0100 260) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 261) Update
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 262) ~~~~~~
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 263) 
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 264) Zero downtime rolling updates are supported starting with release `v0.17.0`
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 265) onward. Updating from any release prior to the KubeVirt `v0.17.0` release is
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 266) not supported.
+057ad7d2 administration/intro.adoc (Pablo Iranzo Gómez 2019-08-14 17:48:30 +0200 267) ______________________________________________________________________________________________________________________________________________________
+057ad7d2 administration/intro.adoc (Pablo Iranzo Gómez 2019-08-14 17:48:30 +0200 268) Note: Updating is only supported from N-1 to N release.
+057ad7d2 administration/intro.adoc (Pablo Iranzo Gómez 2019-08-14 17:48:30 +0200 269) ______________________________________________________________________________________________________________________________________________________
+057ad7d2 administration/intro.adoc (Pablo Iranzo Gómez 2019-08-14 17:48:30 +0200 270) 
+94a07344 administration/intro.adoc (David Vossel       2019-05-15 13:41:16 -0400 271)  
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 272) Updates are triggered one of two ways.
+94a07344 administration/intro.adoc (David Vossel       2019-05-15 13:41:16 -0400 273) 
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 274) 1. By changing the imageTag value in the KubeVirt CR's spec.
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 275) 
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 276) For example, updating from `v0.17.0-alpha.1` to `v0.17.0` is as simple as
+94a07344 administration/intro.adoc (David Vossel       2019-05-15 13:41:16 -0400 277) patching the KubeVirt CR with the `imageTag: v0.17.0` value. From there the
+94a07344 administration/intro.adoc (David Vossel       2019-05-15 13:41:16 -0400 278) KubeVirt operator will begin the process of rolling out the new version of
+94a07344 administration/intro.adoc (David Vossel       2019-05-15 13:41:16 -0400 279) KubeVirt. Existing VM/VMIs will remain uninterrupted both during and after
+94a07344 administration/intro.adoc (David Vossel       2019-05-15 13:41:16 -0400 280) the update succeeds.
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 281) 
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 282) [source,bash]
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 283) ----
+94a07344 administration/intro.adoc (David Vossel       2019-05-15 13:41:16 -0400 284) $ kubectl patch kv kubevirt -n kubevirt --type=json -p '[{ "op": "add", "path": "/spec/imageTag", "value": "v0.17.0" }]'
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 285) ----
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 286) 
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 287) 2. Or, by updating the kubevirt operator if no imageTag value is set.
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 288) 
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 289) When no imageTag value is set in the kubevirt CR, the system assumes that the
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 290) version of KubeVirt is locked to the version of the operator. This means that
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 291) updating the operator will result in the underlying KubeVirt installation being
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 292) updated as well.
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 293) 
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 294) [source,bash]
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 295) ----
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 296) $ export RELEASE=v0.17.0
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 297) $ kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/${RELEASE}/kubevirt-operator.yaml
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 298) ----
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 299) 
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 300) 
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 301) The first way provides a fine granular approach where you have full control
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 302) over what version of KubeVirt is installed independently of what version of
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 303) the KubeVirt operator you might be running. The second approach allows you to
+5f20d8a4 administration/intro.adoc (David Vossel       2019-05-15 15:24:16 -0400 304) lock both the operator and operand to the same version.
+94a07344 administration/intro.adoc (David Vossel       2019-05-15 13:41:16 -0400 305) 
+287f1f0c administration/intro.adoc (Francesco Romani   2019-07-29 10:17:05 +0200 306) Newer KubeVirt may require additional or extended RBAC rules. In this case, the #1 update method may fail,
+287f1f0c administration/intro.adoc (Francesco Romani   2019-07-29 10:17:05 +0200 307) because the virt-operator present in the cluster doesn't have these RBAC rules itself.
+287f1f0c administration/intro.adoc (Francesco Romani   2019-07-29 10:17:05 +0200 308) In this case, you need to update the `virt-operator` first, and then proceed to update kubevirt.
+287f1f0c administration/intro.adoc (Francesco Romani   2019-07-29 10:17:05 +0200 309) See https://github.com/kubevirt/kubevirt/issues/2533[this issue for more details].
+287f1f0c administration/intro.adoc (Francesco Romani   2019-07-29 10:17:05 +0200 310) 
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 311) Delete
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 312) ~~~~~~
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 313) 
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100 314) To delete the KubeVirt you should first to delete `KubeVirt` custom resource and then delete the KubeVirt operator.
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 315) 
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 316) [source,bash]
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 317) ----
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 318) $ export RELEASE=v0.17.0
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100 319) $ kubectl delete -n kubevirt kubevirt kubevirt --wait=true # --wait=true should anyway be default
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100 320) $ kubectl delete apiservices v1alpha3.subresources.kubevirt.io # this needs to be deleted to avoid stuck terminating namespaces
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100 321) $ kubectl delete mutatingwebhookconfigurations virt-api-mutator # not blocking but would be left over
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100 322) $ kubectl delete validatingwebhookconfigurations virt-api-validator # not blocking but would be left over
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100 323) $ kubectl delete -f https://github.com/kubevirt/kubevirt/releases/download/${RELEASE}/kubevirt-operator.yaml --wait=false
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 324) ----
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 325) 
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 326) ______________________________________________________________________________________________________________________________________________________
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100 327) Note: If by mistake you deleted the operator first, the KV custom resource will
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100 328) get stuck in the `Terminating` state, to fix it, delete manually finalizer from
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100 329) the resource.
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100 330) 
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100 331) Note: The `apiservice` and the `webhookconfigurations` need to be deleted manually
+b33f0db7 administration/intro.adoc (Roman Mohr         2020-01-20 10:48:58 +0100 332) due to a bug.
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 333) 
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 334) [source,bash]
+0edb8832 installation/README.adoc  (Fabian Deutsch     2018-12-13 11:28:04 +0100 335) ----
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 336) $ kubectl -n kubevirt patch kv kubevirt --type=json -p '[{ "op": "remove", "path": "/metadata/finalizers" }]'
+4eb6c79a administration/intro.adoc (Fabian Deutsch     2019-02-05 22:38:54 +0100 337) ----
+838c5cb2 administration/intro.adoc (Artyom Lukianov    2019-03-06 15:22:44 +0200 338) ______________________________________________________________________________________________________________________________________________________
