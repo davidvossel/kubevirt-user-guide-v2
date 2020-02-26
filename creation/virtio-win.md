@@ -75,17 +75,17 @@ or vioscsi, depending on whichever you have set up.
 
 Step by step screenshots:
 
-![Windows install](assets/virtio_custom_install_0.png)
+![Windows install](../assets/virtio_custom_install_0.png)
 
-![Custom install](assets/virtio_custom_install_1.png)
+![Custom install](../assets/virtio_custom_install_1.png)
 
-![Disk install](assets/virtio_custom_install_2.png)
+![Disk install](../assets/virtio_custom_install_2.png)
 
-![Choose medium](assets/virtio_custom_install_3.png)
+![Choose medium](../assets/virtio_custom_install_3.png)
 
-![Choose driver](assets/virtio_custom_install_4.png)
+![Choose driver](../assets/virtio_custom_install_4.png)
 
-![Continue install](assets/virtio_custom_install_5.png)
+![Continue install](../assets/virtio_custom_install_5.png)
 
 ### How to install after Windows install?
 
@@ -94,13 +94,13 @@ Manager](https://support.microsoft.com/en-us/help/4026149/windows-open-device-ma
 There you should see undetected devices in "available devices" section.
 You can install virtio drivers one by one going through this list.
 
-![Unknown devices](assets/virtio_driver_install_0.png)
+![Unknown devices](../assets/virtio_driver_install_0.png)
 
-![Select driver by id](assets/virtio_driver_install_1.png)
+![Select driver by id](../assets/virtio_driver_install_1.png)
 
-![Install driver](assets/virtio_driver_install_2.png)
+![Install driver](../assets/virtio_driver_install_2.png)
 
-![Driver installed](assets/virtio_driver_install_3.png)
+![Driver installed](../assets/virtio_driver_install_3.png)
 
 For more details on how to choose a proper driver and how to install the
 driver, please refer to the [Windows Guest Virtual Machines on Red Hat
