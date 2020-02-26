@@ -198,27 +198,27 @@ spec:
 Saving this manifest into `vm.yaml` and submitting it to Kubernetes will
 create the controller instance:
 
-````
+```
 $ kubectl create -f vm.yaml 
 virtualmachine "vm-cirros" created
 ```
 
 Since `spec.running` is set to `false`, no vmi will be created:
 
-````
+```
 $ kubectl get vmis
 No resources found.
-````
+```
 
 Let’s start the VirtualMachine:
 
-````
+```
 $ virtctl start omv vm-cirros
-````
+```
 
 As expected, a VirtualMachineInstance called `vm-cirros` got created:
 
-````
+```
 $ kubectl describe vm vm-cirros
 Name:         vm-cirros
 Namespace:    default
@@ -272,7 +272,7 @@ Events:
   Type    Reason            Age   From                              Message
   ----    ------            ----  ----                              -------
   Normal  SuccessfulCreate  15s   virtualmachine-controller  Created virtual machine: vm-cirros
-````
+```
 
 ### Kubectl commandline interactions
 
@@ -280,6 +280,7 @@ Whenever you want to manipulate the VirtualMachine through the
 commandline you can use the kubectl command. The following are examples
 demonstrating how to do it.
 
+```
     # Define a virtual machine:
     kubectl create -f myvm.yaml
 
@@ -309,3 +310,4 @@ demonstrating how to do it.
     # Orphan delete (The running virtual machine is only detached, not deleted)
     # Recreating the virtual machine would lead to the adoption of the virtual machine instance
     kubectl delete virtualmachine myvm --cascade=false
+```
