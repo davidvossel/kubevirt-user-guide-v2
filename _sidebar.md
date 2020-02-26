@@ -3,6 +3,7 @@
 * [Welcome](README.md)
 * [Architecture](architecture.md)
 * [Installing Kubevirt](installation/installation.md)
+  * [virtctl Client Tool](installation/virtctl.md)
   * [Updates and Deletion](installation/updating-and-deleting-installs.md)
   * [Enabling Live Migration](installation/live-migration.md)
   * [Enabling HugePage Support](installation/hugepages.md)
