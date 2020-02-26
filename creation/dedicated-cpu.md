@@ -179,7 +179,8 @@ must express CPU and memory requirements. At this time, Kubevirt often
 uses a sidecar container to mount VMI’s registry disk. It also uses a
 sidecar container of it’s hooking mechanism. These additional resources
 can be viewed as an overhead and should be taken into account when
-calculating a node capacity. &gt; **Note:** The current defaults for
-sidecar’s resources: &gt; \* CPU: 200m &gt; \* Memory: 64M &gt; As the
-CPU resource is not expressed as a whole number, CPU manager will not
-&gt; attempt to pin the sidecar container to a host CPU.
+calculating a node capacity.
+
+**Note:** The current defaults for sidecar’s resources: `CPU: 200m`
+`Memory: 64M` As the CPU resource is not expressed as a whole number,
+CPU manager will not attempt to pin the sidecar container to a host CPU.

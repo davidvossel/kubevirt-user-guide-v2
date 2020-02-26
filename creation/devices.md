@@ -10,9 +10,9 @@ Machine Type
 
 QEMU is able to work with two different classes of chipsets for x86\_64,
 so called machine types. The x86\_64 chipsets are i440fx (also called
-pc) and q35. They are versioned based on qemu-system-latexmath:\[$ARCH,
-following the format `pc-$]\{machine_type}-$\{qemu_version}`,
-e.g.`` pc-i440fx-2.10`and`pc-q35-2.10 ``.
+pc) and q35. They are versioned based on qemu-system-latexmath:$ARCH,
+following the format `pc-${machine_type}-${qemu_version}`,
+e.g.`pc-i440fx-2.10` and `pc-q35-2.10`.
 
 KubeVirt defaults to QEMU’s newest q35 machine type. If a custom machine
 type is desired, it is configurable through the following structure:
@@ -218,8 +218,7 @@ following VM will have a CPU with the `Conroe` model:
 You can check list of available models
 [here](https://github.com/libvirt/libvirt/blob/master/src/cpu_map/index.xml).
 
-When CPUNodeDiscovery feature-gate is enabled(as mentioned in
-[???](#Enabling cpu compatibility enforcement)) and VM has cpu model,
+When CPUNodeDiscovery feature-gate is enabled and VM has cpu model,
 Kubevirt creates node selector with format:
 `feature.node.kubernetes.io/cpu-model-<cpuModel>`, e.g.
 `feature.node.kubernetes.io/cpu-model-Conroe`. When VM doesn’t have cpu
@@ -245,9 +244,8 @@ Default CPU model is set when vmi doesn’t have any cpu model. When vmi
 has cpu model set, then vmi’s cpu model is preferred. When default cpu
 model is not set and vmi’s cpu model is not set too, `host-model` will
 be set. Default cpu model can be changed when kubevirt is running. When
-CPUNodeDiscovery feature gate is enabled (as mentioned in
-[???](#Enabling cpu compatibility enforcement)), Kubevirt creates node
-selector with default cpu model.
+CPUNodeDiscovery feature gate is enabled Kubevirt creates node selector
+with default cpu model.
 
 #### CPU model special cases
 
@@ -320,8 +318,7 @@ Behaviour according to Policies:
 Full description about features and policies can be found
 [here](https://libvirt.org/formatdomain.html#elementsCPU).
 
-When CPUNodeDiscovery feature-gate is enabled (as mentioned in
-[???](#Enabling cpu compatibility enforcement)), Kubevirt creates node
+When CPUNodeDiscovery feature-gate is enabled Kubevirt creates node
 selector from cpu features with format:
 `feature.node.kubernetes.io/cpu-feature-<cpuFeature>`, e.g.
 `feature.node.kubernetes.io/cpu-feature-apic`. When VM doesn’t have cpu

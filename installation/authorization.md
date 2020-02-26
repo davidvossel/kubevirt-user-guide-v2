@@ -46,10 +46,10 @@ runtime config. This config exists within a configmap called
 **kubevirt-config** in the namespace the KubeVirt components are
 running.
 
-*NOTE* Users are only guaranteed the ability to modify the kubevirt
-runtime configuration if a ClusterRoleBinding is used. A RoleBinding
-will work to provide kubevirt-config access only if the RoleBinding
-targets the same namespace the kubevirt-config exists in.
+> *NOTE* Users are only guaranteed the ability to modify the kubevirt
+> runtime configuration if a ClusterRoleBinding is used. A RoleBinding
+> will work to provide kubevirt-config access only if the RoleBinding
+> targets the same namespace the kubevirt-config exists in.
 
 ### Binding Default ClusterRoles to Users
 

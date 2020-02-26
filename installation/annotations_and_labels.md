@@ -15,7 +15,7 @@ also documented
 kubevirt.io
 -----------
 
-Example: kubevirt.io=virt-launcher
+Example: `kubevirt.io=virt-launcher`
 
 Used on: Pod
 
@@ -27,7 +27,7 @@ for example, to uninstall it from a cluster.
 kubevirt.io/schedulable
 -----------------------
 
-Example: kubevirt.io/schedulable=true
+Example: `kubevirt.io/schedulable=true`
 
 Used on: Node
 
@@ -37,7 +37,7 @@ scheduling virtual machine instances on it.
 kubevirt.io/heartbeat
 ---------------------
 
-Example: kubevirt.io/heartbeat=2018-07-03T20:07:25Z
+Example: `kubevirt.io/heartbeat=2018-07-03T20:07:25Z`
 
 Used on: Node
 

@@ -74,13 +74,10 @@ What’s next
 ===========
 
 -   More information about persistent and ephemeral volumes:
-    &lt;&lt;../creating-virtual-machines/disks-and-volumes.adoc\#,Disks
-    and Volumes&gt;&gt;
+    [Disks and Volumes](creation/disks-and-volumes.md)
 
 -   How to access a VirtualMachineInstance via `console` or `vnc`:
-    &lt;&lt;../using-virtual-machines/graphical-and-console-access.adoc\#,Graphical
-    and Serial Console Access&gt;&gt;
+    [Console Access](usage/graphical-and-console-access.md)
 
 -   How to customize VirtualMachineInstances with `cloud-init`:
-    &lt;&lt;../creating-virtual-machines/startup-scripts.adoc\#,Startup
-    Scripts&gt;&gt;
+    [Cloud Init] (creation/cloud-init.md)

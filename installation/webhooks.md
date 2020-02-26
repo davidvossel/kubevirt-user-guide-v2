@@ -55,9 +55,9 @@ are present in the Apiserver’s **--admission-control** cli argument.
 Below is an example of the **--admission-control** values we use during
 development
 
-\`\`\`
---admission-control=*Initializers,NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota*
-\`\`\`
+```
+--admission-control='Initializers,NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota'
+```
 
 Enabling KubeVirt Admission Controller on OKD
 ---------------------------------------------
@@ -69,8 +69,6 @@ enable webhooks using an admission plugin.
 These admission control plugins can be configured in openshift-ansible
 by setting the following value in ansible inventory file.
 
-\`\`\`
-openshift\_master\_admission\_plugin\_config={"ValidatingAdmissionWebhook":{"configuration":{"kind":
-"DefaultAdmissionConfig","apiVersion": "v1","disable":
-false}},"MutatingAdmissionWebhook":{"configuration":{"kind":
-"DefaultAdmissionConfig","apiVersion": "v1","disable": false}}} \`\`\`
+```
+openshift_master_admission_plugin_config={"ValidatingAdmissionWebhook":{"configuration":{"kind": "DefaultAdmissionConfig","apiVersion": "v1","disable": false}},"MutatingAdmissionWebhook":{"configuration":{"kind": "DefaultAdmissionConfig","apiVersion": "v1","disable": false}}}
+```

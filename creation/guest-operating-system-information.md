@@ -193,6 +193,5 @@ Alternatively, users can edit an existing kubevirt-config:
 
 `kubectl edit configmap kubevirt-config -n kubevirt`
 
-    ...
     data:
       feature-gates: "HypervStrictCheck,CPUManager"
