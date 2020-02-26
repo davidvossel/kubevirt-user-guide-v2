@@ -12,40 +12,23 @@ Requirements
 
 A few requirements need to be met before you can begin:
 
--   [Kubernetes](https://kubernetes.io) cluster
-    ([OpenShift](https://github.com/openshift/origin), Tectonic)
-
+-   [Kubernetes](https://kubernetes.io) cluster or derivative
+    (such as [OpenShift](https://github.com/openshift/origin), Tectonic)
+    based on Kubernetes 1.10 or greater
+-   Kubernetes apiserver must have `--allow-privileged=true` in order to run KubeVirt's privileged DaemonSet.
 -   `kubectl` client utility
 
--   `git`
-
-### Minimum Cluster Requirements
-
-Kubernetes 1.10 or later is required to run KubeVirt.
-
-In addition it can be that feature gates need to be opened.
-
-### Cluster Configuration
-
-The Kubernetes apiserver needs to be configured to allow privileged pods
-since we run a privileged Daemon Set on every node. The required flag is
-`--allow-privileged=true`.
-
-#### Runtime
+### Container Runtime Support
 
 KubeVirt is currently supported on the following container runtimes:
 
 -   docker
-
 -   crio (with runv)
 
 Other container runtimes, which do not use virtualization features,
 should work too. However, they are not tested.
 
-### Virtualization support
-
-There are several distributions of Kubernetes, you need to decide on one
-and deploy it.
+### Validate Hardware Virtualization Support
 
 Hardware with virtualization support is recommended. You can use
 virt-host-validate to ensure that your hosts are capable of running
@@ -59,8 +42,6 @@ virtualization workloads:
       QEMU: Checking if device /dev/net/tun exists                               : PASS
     ...
 
-#### Software emulation
-
 If hardware virtualization is not available, then a [software emulation
 fallback](https://github.com/kubevirt/kubevirt/blob/master/docs/software-emulation.md)
 can be enabled using:
@@ -72,42 +53,18 @@ can be enabled using:
 This ConfigMap needs to be created before deployment or the
 virt-controller deployment has to be restarted.
 
-### Hugepages support
+## Installing KubeVirt on Kubernetes
 
-For hugepages support you need at least Kubernetes version `1.9`.
+KubeVirt can be installed using the KubeVirt operator, which manages the
+lifecycle of all the KubeVirt core components. Below is an example of
+how to install KubeVirt using an official release.
 
-#### Enable feature-gate
-
-To enable hugepages on Kubernetes, check the [official
-documentation](https://kubernetes.io/docs/tasks/manage-hugepages/scheduling-hugepages/).
-
-To enable hugepages on OKD, check the [official
-documentation](https://docs.openshift.org/3.9/scaling_performance/managing_hugepages.html#huge-pages-prerequisites).
-
-#### Pre-allocate hugepages on a node
-
-To pre-allocate hugepages on boot time, you will need to specify
-hugepages under kernel boot parameters `hugepagesz=2M hugepages=64` and
-restart your machine.
-
-You can find more about hugepages under [official
-documentation](https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt).
-
-Cluster side add-on deployment
-------------------------------
-
-### Core components
-
-Once Kubernetes is deployed, you will need to deploy the KubeVirt
-add-on.
-
-The installation uses the KubeVirt operator, which manages lifecycle of
-all KubeVirt core components:
-
+    # Pick an upstream version of KubeVirt to install
+    $ export VERSION=v0.26.0
     # Deploy the KubeVirt operator
-    $ kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/v0.24.0/kubevirt-operator.yaml
+    $ kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/${VERSION}/kubevirt-operator.yaml
     # Create the KubeVirt CR (instance deployment request)
-    $ kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/v0.24.0/kubevirt-cr.yaml
+    $ kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/${VERSION}/kubevirt-cr.yaml
     # wait until all KubeVirt components is up
     $ kubectl -n kubevirt wait kv kubevirt --for condition=Available
 
@@ -123,31 +80,7 @@ All new components will be deployed under the `kubevirt` namespace:
     virt-handler-vwdjx                             1/1       Running       0          1m
     ...
 
-### Restricting virt-handler DaemonSet
-
-You can patch the `virt-handler` DaemonSet post-deployment to restrict
-it to a specific subset of nodes with a nodeSelector. For example, to
-restrict the DaemonSet to only nodes with the "region=primary" label:
-
-    kubectl patch ds/virt-handler -n kubevirt -p '{"spec": {"template": {"spec": {"nodeSelector": {"region": "primary"}}}}}'
-
-## Deploying on OKD
-
-The following
-[SCC](https://docs.openshift.com/container-platform/3.11/admin_guide/manage_scc.html)
-needs to be added prior KubeVirt deployment:
-
-    $ oc adm policy add-scc-to-user privileged -n kubevirt -z kubevirt-operator
-
-Once privileges are granted, the KubeVirt can be deployed as described above.
-
-### Web user interface on OKD
-
-No additional steps are required to extend OKD's web console for KubeVirt.
-
-The virtualization extension is automatically enabled when KubeVirt deployment is detected.
-
-## Client side `virtctl` deployment
+## Retrieving the `virtctl` client tool
 
 Basic VirtualMachineInstance operations can be performed with the stock
 `kubectl` utility. However, the `virtctl` binary utility is required to
@@ -192,6 +125,22 @@ should then be read as
 
     $ kubectl virt <command>...
 
+## Installing KubeVirt on OKD
+
+The following
+[SCC](https://docs.openshift.com/container-platform/3.11/admin_guide/manage_scc.html)
+needs to be added prior KubeVirt deployment:
+
+    $ oc adm policy add-scc-to-user privileged -n kubevirt -z kubevirt-operator
+
+Once privileges are granted, the KubeVirt can be deployed as described above.
+
+### Web user interface on OKD
+
+No additional steps are required to extend OKD's web console for KubeVirt.
+
+The virtualization extension is automatically enabled when KubeVirt deployment is detected.
+
 ### From Service Catalog as an APB
 
 You can find KubeVirt in the OKD Service Catalog and install it from
@@ -220,68 +169,11 @@ guide](https://github.com/kubevirt/ovs-cni/blob/master/docs/deployment-on-arbitr
 > playbook](https://github.com/kubevirt/kubevirt-ansible/tree/master/playbooks#network)
 > installs these plugins by default.
 
-Update
-------
+# Restricting virt-handler DaemonSet
 
-Zero downtime rolling updates are supported starting with release
-`v0.17.0` onward. Updating from any release prior to the KubeVirt
-`v0.17.0` release is not supported.
+You can patch the `virt-handler` DaemonSet post-deployment to restrict
+it to a specific subset of nodes with a nodeSelector. For example, to
+restrict the DaemonSet to only nodes with the "region=primary" label:
 
-> Note: Updating is only supported from N-1 to N release.
+    kubectl patch ds/virt-handler -n kubevirt -p '{"spec": {"template": {"spec": {"nodeSelector": {"region": "primary"}}}}}'
 
-Updates are triggered one of two ways.
-
-1.  By changing the imageTag value in the KubeVirt CR’s spec.
-
-For example, updating from `v0.17.0-alpha.1` to `v0.17.0` is as simple
-as patching the KubeVirt CR with the `imageTag: v0.17.0` value. From
-there the KubeVirt operator will begin the process of rolling out the
-new version of KubeVirt. Existing VM/VMIs will remain uninterrupted both
-during and after the update succeeds.
-
-    $ kubectl patch kv kubevirt -n kubevirt --type=json -p '[{ "op": "add", "path": "/spec/imageTag", "value": "v0.17.0" }]'
-
-1.  Or, by updating the kubevirt operator if no imageTag value is set.
-
-When no imageTag value is set in the kubevirt CR, the system assumes
-that the version of KubeVirt is locked to the version of the operator.
-This means that updating the operator will result in the underlying
-KubeVirt installation being updated as well.
-
-    $ export RELEASE=v0.17.0
-    $ kubectl apply -f https://github.com/kubevirt/kubevirt/releases/download/${RELEASE}/kubevirt-operator.yaml
-
-The first way provides a fine granular approach where you have full
-control over what version of KubeVirt is installed independently of what
-version of the KubeVirt operator you might be running. The second
-approach allows you to lock both the operator and operand to the same
-version.
-
-Newer KubeVirt may require additional or extended RBAC rules. In this
-case, the \#1 update method may fail, because the virt-operator present
-in the cluster doesn’t have these RBAC rules itself. In this case, you
-need to update the `virt-operator` first, and then proceed to update
-kubevirt. See [this issue for more
-details](https://github.com/kubevirt/kubevirt/issues/2533).
-
-Delete
-------
-
-To delete the KubeVirt you should first to delete `KubeVirt` custom
-resource and then delete the KubeVirt operator.
-
-    $ export RELEASE=v0.17.0
-    $ kubectl delete -n kubevirt kubevirt kubevirt --wait=true # --wait=true should anyway be default
-    $ kubectl delete apiservices v1alpha3.subresources.kubevirt.io # this needs to be deleted to avoid stuck terminating namespaces
-    $ kubectl delete mutatingwebhookconfigurations virt-api-mutator # not blocking but would be left over
-    $ kubectl delete validatingwebhookconfigurations virt-api-validator # not blocking but would be left over
-    $ kubectl delete -f https://github.com/kubevirt/kubevirt/releases/download/${RELEASE}/kubevirt-operator.yaml --wait=false
-
-> Note: If by mistake you deleted the operator first, the KV custom
-> resource will get stuck in the `Terminating` state, to fix it, delete
-> manually finalizer from the resource.
->
-> Note: The `apiservice` and the `webhookconfigurations` need to be
-> deleted manually due to a bug.
->
->     $ kubectl -n kubevirt patch kv kubevirt --type=json -p '[{ "op": "remove", "path": "/metadata/finalizers" }]'
