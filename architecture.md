@@ -1,7 +1,7 @@
 VirtualMachine
 ==============
 
-An *VirtualMachine* provides additional management capabilities to a
+An `VirtualMachine` provides additional management capabilities to a
 VirtualMachineInstance inside the cluster. That includes:
 
 -   ABI stability
@@ -31,10 +31,10 @@ VirtualMachineInstance will be removed from the cluster if
 There exists a field `spec.runStrategy` which can also be used to
 control the state of the associated VirtualMachineInstance object. To
 avoid confusing and contradictory states, these fields are mutually
-exclusive. An extended explanation of `spec.runStrategy` vs
-`spec.running` can be found in
-&lt;&lt;../creating-virtual-machines/run-strategies.adoc\#,Run
-Strategies&gt;&gt;
+exclusive.
+
+An extended explanation of `spec.runStrategy` vs `spec.running` can be
+found in [Run Strategies](creation/run-strategies.md)
 
 ### Starting and stopping
 
@@ -117,19 +117,19 @@ started:
     $ virtctl expose virtualmachine vmi-ephemeral --name vmiservice --port 27017 --target-port 22
 
 All service exposure options that apply to a VirtualMachineInstance
-apply to a VirtualMachine. See
-&lt;&lt;../using-virtual-machines/expose-service.adoc\#,Exposing
-VirtualMachineInstance&gt;&gt; for more details.
+apply to a VirtualMachine.
+
+See [Network Service Integration](usage/network-service-integration.md) for more details.
 
 When to use a VirtualMachine
 ----------------------------
 
 ### When ABI stability is required between restarts
 
-A *VirtualMachine* makes sure that VirtualMachineInstance ABI
+A `VirtualMachine` makes sure that VirtualMachineInstance ABI
 configurations are consistent between restarts. A classical example are
 licenses which are bound to the firmware UUID of a virtual machine. The
-*VirtualMachine* makes sure that the UUID will always stay the same
+`VirtualMachine` makes sure that the UUID will always stay the same
 without the user having to take care of it.
 
 One of the main benefits is that a user can still make use of defaulting
@@ -148,51 +148,133 @@ Kubernetes as a declarative system can help you to manage the
 VirtualMachineInstance. You tell it that you want this
 VirtualMachineInstance with your application running, the VirtualMachine
 will try to make sure it stays running.
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
-\*Note\*: The current believe is that if it is defined that the
-VirtualMachineInstance should be running, it should be running. This is
-different to many classical virtualization platforms, where VMs stay
-down if they were switched off. Restart policies may be added if needed.
-Please provide your use-case if you need this!
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
-Example ~~~~~~~ \[source,yaml\] ---- apiVersion: kubevirt.io/v1alpha3
-kind: VirtualMachine metadata: labels: kubevirt.io/vm: vm-cirros name:
-vm-cirros spec: running: false template: metadata: labels:
-kubevirt.io/vm: vm-cirros spec: domain: devices: disks: - disk: bus:
-virtio name: containerdisk - disk: bus: virtio name: cloudinitdisk
-machine: type: "" resources: requests: memory: 64M
-terminationGracePeriodSeconds: 0 volumes: - name: containerdisk
-containerDisk: image: kubevirt/cirros-container-disk-demo:latest -
-cloudInitNoCloud: userDataBase64:
-IyEvYmluL3NoCgplY2hvICdwcmludGVkIGZyb20gY2xvdWQtaW5pdCB1c2VyZGF0YScK
-name: cloudinitdisk ---- Saving this manifest into \`vm.yaml\` and
-submitting it to Kubernetes will create the controller instance:
-\[source,bash\] ---- $ kubectl create -f vm.yaml virtualmachine
-"vm-cirros" created ---- Since \`spec.running\` is set to \`false\`, no
-vmi will be created: \[source,bash\] ---- $ kubectl get vmis No
-resources found. ---- Let’s start the VirtualMachine: \[source,bash\]
----- $ virtctl start omv vm-cirros ---- As expected, a
-VirtualMachineInstance called \`vm-cirros\` got created: \[source,yaml\]
----- $ kubectl describe vm vm-cirros Name: vm-cirros Namespace: default
-Labels: kubevirt.io/vm=vm-cirros Annotations: &lt;none&gt; API Version:
-kubevirt.io/v1alpha3 Kind: VirtualMachine Metadata: Cluster Name:
-Creation Timestamp: 2018-04-30T09:25:08Z Generation: 0 Resource Version:
-6418 Self Link:
-/apis/kubevirt.io/v1alpha3/namespaces/default/virtualmachines/vm-cirros
-UID: 60043358-4c58-11e8-8653-525500d15501 Spec: Running: true Template:
-Metadata: Creation Timestamp: &lt;nil&gt; Labels: Kubevirt . Io / Ovmi:
-vm-cirros Spec: Domain: Devices: Disks: Disk: Bus: virtio Name:
-containerdisk Volume Name: containerdisk Disk: Bus: virtio Name:
-cloudinitdisk Volume Name: cloudinitdisk Machine: Type: Resources:
-Requests: Memory: 64M Termination Grace Period Seconds: 0 Volumes: Name:
-containerdisk Registry Disk: Image:
-kubevirt/cirros-registry-disk-demo:latest Cloud Init No Cloud: User Data
-Base 64:
-IyEvYmluL3NoCgplY2hvICdwcmludGVkIGZyb20gY2xvdWQtaW5pdCB1c2VyZGF0YScK
-Name: cloudinitdisk Status: Created: true Ready: true Events: Type
-Reason Age From Message ---- ------ ---- ---- ------- Normal
-SuccessfulCreate 15s virtualmachine-controller Created virtual machine:
-vm-cirros ---- kubectl commandline interactions&lt;/programlisting&gt;
+
+> Note: The current believe is that if it is defined that the
+> VirtualMachineInstance should be running, it should be running. This is
+> different to many classical virtualization platforms, where VMs stay
+> down if they were switched off. Restart policies may be added if needed.
+> Please provide your use-case if you need this!
+
+### Example
+
+```
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  labels:
+    kubevirt.io/vm: vm-cirros
+  name: vm-cirros
+spec:
+  running: false
+  template:
+    metadata:
+      labels:
+        kubevirt.io/vm: vm-cirros
+    spec:
+      domain:
+        devices:
+          disks:
+          - disk:
+              bus: virtio
+            name: containerdisk
+          - disk:
+              bus: virtio
+            name: cloudinitdisk
+        machine:
+          type: ""
+        resources:
+          requests:
+            memory: 64M
+      terminationGracePeriodSeconds: 0
+      volumes:
+      - name: containerdisk
+        containerDisk:
+          image: kubevirt/cirros-container-disk-demo:latest
+      - cloudInitNoCloud:
+          userDataBase64: IyEvYmluL3NoCgplY2hvICdwcmludGVkIGZyb20gY2xvdWQtaW5pdCB1c2VyZGF0YScK
+        name: cloudinitdisk
+```
+
+Saving this manifest into `vm.yaml` and submitting it to Kubernetes will
+create the controller instance:
+
+````
+$ kubectl create -f vm.yaml 
+virtualmachine "vm-cirros" created
+```
+
+Since `spec.running` is set to `false`, no vmi will be created:
+
+````
+$ kubectl get vmis
+No resources found.
+````
+
+Let’s start the VirtualMachine:
+
+````
+$ virtctl start omv vm-cirros
+````
+
+As expected, a VirtualMachineInstance called `vm-cirros` got created:
+
+````
+$ kubectl describe vm vm-cirros
+Name:         vm-cirros
+Namespace:    default
+Labels:       kubevirt.io/vm=vm-cirros
+Annotations:  <none>
+API Version:  kubevirt.io/v1alpha3
+Kind:         VirtualMachine
+Metadata:
+  Cluster Name:        
+  Creation Timestamp:  2018-04-30T09:25:08Z
+  Generation:          0
+  Resource Version:    6418
+  Self Link:           /apis/kubevirt.io/v1alpha3/namespaces/default/virtualmachines/vm-cirros
+  UID:                 60043358-4c58-11e8-8653-525500d15501
+Spec:
+  Running:  true
+  Template:
+    Metadata:
+      Creation Timestamp:  <nil>
+      Labels:
+        Kubevirt . Io / Ovmi:  vm-cirros
+    Spec:
+      Domain:
+        Devices:
+          Disks:
+            Disk:
+              Bus:        virtio
+            Name:         containerdisk
+            Volume Name:  containerdisk
+            Disk:
+              Bus:        virtio
+            Name:         cloudinitdisk
+            Volume Name:  cloudinitdisk
+        Machine:
+          Type:  
+        Resources:
+          Requests:
+            Memory:                      64M
+      Termination Grace Period Seconds:  0
+      Volumes:
+        Name:  containerdisk
+        Registry Disk:
+          Image:  kubevirt/cirros-registry-disk-demo:latest
+        Cloud Init No Cloud:
+          User Data Base 64:  IyEvYmluL3NoCgplY2hvICdwcmludGVkIGZyb20gY2xvdWQtaW5pdCB1c2VyZGF0YScK
+        Name:                 cloudinitdisk
+Status:
+  Created:  true
+  Ready:    true
+Events:
+  Type    Reason            Age   From                              Message
+  ----    ------            ----  ----                              -------
+  Normal  SuccessfulCreate  15s   virtualmachine-controller  Created virtual machine: vm-cirros
+````
+
+### Kubectl commandline interactions
 
 Whenever you want to manipulate the VirtualMachine through the
 commandline you can use the kubectl command. The following are examples
