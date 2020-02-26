@@ -36,4 +36,4 @@
 * [Virtual Machine Templates](templates/templates.md)
   * [Common Templates](templates/common-templates.md)
   * [Using Templates](templates/using-templates.md)
-* [Web Interface](webinterface.md)
+* [Web Interface](web-interface.md)
