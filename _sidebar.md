@@ -1,7 +1,6 @@
 # Table of contents
 
 * [Welcome](README.md)
-* [Release Notes](changelog.md)
 * [Architecture](architecture.md)
 * [Installation](installation/installation.md)
   * [Webhooks](installation/webhooks.md)
@@ -37,3 +36,4 @@
   * [Common Templates](templates/common-templates.md)
   * [Using Templates](templates/using-templates.md)
 * [Web Interface](web-interface.md)
+* [Latest Release Notes](changelog.md)
