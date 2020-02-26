@@ -131,27 +131,23 @@ restrict the DaemonSet to only nodes with the "region=primary" label:
 
     kubectl patch ds/virt-handler -n kubevirt -p '{"spec": {"template": {"spec": {"nodeSelector": {"region": "primary"}}}}}'
 
-Deploying on OKD
+## Deploying on OKD
 
-    The following
-    https://docs.openshift.com/container-platform/3.11/admin_guide/manage_scc.html[SCC]
-    needs to be added prior KubeVirt deployment:
+The following
+[SCC](https://docs.openshift.com/container-platform/3.11/admin_guide/manage_scc.html)
+needs to be added prior KubeVirt deployment:
 
-    [source,bash]
-    ----
     $ oc adm policy add-scc-to-user privileged -n kubevirt -z kubevirt-operator
-    ----
 
-    Once privileges are granted, the KubeVirt can be deployed as described above.
+Once privileges are granted, the KubeVirt can be deployed as described above.
 
-    Web user interface on OKD
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+### Web user interface on OKD
 
-    No additional steps are required to extend OKD's web console for KubeVirt.
+No additional steps are required to extend OKD's web console for KubeVirt.
 
-    The virtualization extension is automatically enabled when KubeVirt deployment is detected.
+The virtualization extension is automatically enabled when KubeVirt deployment is detected.
 
-    Client side `virtctl` deployment
+## Client side `virtctl` deployment
 
 Basic VirtualMachineInstance operations can be performed with the stock
 `kubectl` utility. However, the `virtctl` binary utility is required to
@@ -174,7 +170,7 @@ There are two ways to get it:
 -   it can be installed as a `kubectl` plugin using
     [krew](https://krew.dev/)
 
-#### Install `virtctl` with `krew`
+### Install `virtctl` with `krew`
 
 It is required to [install `krew` plugin
 manager](https://github.com/kubernetes-sigs/krew/#installation)
