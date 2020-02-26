@@ -275,27 +275,83 @@ document.
 
 `demo-template.yaml`
 
-\`\`\` apiversion: v1 items: - apiversion: kubevirt.io/v1alpha3 kind:
-virtualmachine metadata: labels: vm.kubevirt.io/template:
-rhel7-generic-tiny name: rheltinyvm osinfoname: rhel7.0
-defaults.template.kubevirt.io/disk: rhel-default-disk
-defaults.template.kubevirt.io/nic: rhel-default-net spec: running: false
-template: spec: domain: cpu: sockets: 1 cores: 1 threads: 1 devices:
-rng: {} resources: requests: memory: 1g terminationgraceperiodseconds: 0
-volumes: - containerDisk: image:
-registry:5000/kubevirt/cirros-container-disk-demo:devel name:
-rhel-default-disk networks: - genie: networkName: flannel name:
-rhel-default-net kind: list metadata: {} \`\`\`
+```
+apiversion: v1
+items:
+- apiversion: kubevirt.io/v1alpha3
+  kind: virtualmachine
+  metadata:
+    labels:
+      vm.kubevirt.io/template: rhel7-generic-tiny
+    name: rheltinyvm
+    osinfoname: rhel7.0
+    defaults.template.kubevirt.io/disk: rhel-default-disk
+    defaults.template.kubevirt.io/nic: rhel-default-net
+  spec:
+    running: false
+    template:
+      spec:
+        domain:
+          cpu:
+            sockets: 1
+            cores: 1
+            threads: 1
+          devices:
+            rng: {}
+          resources:
+            requests:
+              memory: 1g
+        terminationgraceperiodseconds: 0
+        volumes:
+        - containerDisk:
+          image: registry:5000/kubevirt/cirros-container-disk-demo:devel
+          name: rhel-default-disk
+        networks:
+        - genie:
+          networkName: flannel
+          name: rhel-default-net
+kind: list
+metadata: {}
+```
 
-once processed becomes: `demo-vm.yaml`
+once processed becomes:
+`demo-vm.yaml`
 
-\`\`\` apiVersion: kubevirt.io/v1alpha3 kind: VirtualMachine metadata:
-labels: vm.kubevirt.io/template: rhel7-generic-tiny name: rheltinyvm
-osinfoname: rhel7.0 spec: running: false template: spec: domain: cpu:
-sockets: 1 cores: 1 threads: 1 resources: requests: memory: 1g devices:
-rng: {} disks: - disk: name: rhel-default-disk interfaces: - bridge: {}
-name: rhel-default-nic terminationgraceperiodseconds: 0 volumes: -
-containerDisk: image:
-registry:5000/kubevirt/cirros-container-disk-demo:devel name:
-containerdisk networks: - genie: networkName: flannel name:
-rhel-default-nic \`\`\`
+```
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  labels:
+    vm.kubevirt.io/template: rhel7-generic-tiny
+  name: rheltinyvm
+  osinfoname: rhel7.0
+spec:
+  running: false
+  template:
+    spec:
+      domain:
+        cpu:
+          sockets: 1
+          cores: 1
+          threads: 1
+        resources:
+          requests:
+            memory: 1g
+        devices:
+          rng: {}
+          disks:
+          - disk:
+            name: rhel-default-disk
+        interfaces:
+        - bridge: {}
+          name: rhel-default-nic
+      terminationgraceperiodseconds: 0
+      volumes:
+      - containerDisk:
+          image: registry:5000/kubevirt/cirros-container-disk-demo:devel
+        name: containerdisk
+      networks:
+      - genie:
+          networkName: flannel
+        name: rhel-default-nic
+```

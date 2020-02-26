@@ -8,9 +8,9 @@ Creating a Virtual Machine with the Interactive Wizard
 ======================================================
 
 The web console features an interactive wizard that guides you through
-[**Basic Settings**](#vm-wizard-fields-web),
-[**Networking**](#networking-wizard-fields-web), and
-[**Storage**](#storage-wizard-fields-web) screens to simplify the
+[**Basic Settings**](#virtual-machine-wizard-fields),
+[**Networking**](#networking-fields), and
+[**Storage**](#storage-fields) screens to simplify the
 process of creating virtual machines. All required fields are marked
 with a `*`. The wizard prevents you from moving to the next screen until
 the required fields have been completed.
@@ -21,7 +21,7 @@ after they have been created.
 ****Bootable Disk**.**
 
 If either `URL` or `Container` are selected as the **Provision Source**
-in the [**Basic Settings**](#vm-wizard-fields-web) screen, a `rootdisk`
+in the [**Basic Settings**](#virtual-machine-wizard-fields) screen, a `rootdisk`
 disk is created and attached to the virtual machine as the **Bootable
 Disk**. You can modify the `rootdisk` but you cannot remove it.
 
@@ -34,11 +34,11 @@ must select one as the **Bootable Disk**.
 
 2.  Click **Create Virtual Machine** and select **Create with Wizard**.
 
-3.  Fill in all required [**Basic Settings**](#vm-wizard-fields-web).
+3.  Fill in all required [**Basic Settings**](#virtual-machine-wizard-fields).
     Selecting a **Template** automatically fills in these fields.
 
 4.  Click **Next** to progress to the
-    [**Networking**](#networking-wizard-fields-web) screen. A `nic0` NIC
+    [**Networking**](#networking-fields) screen. A `nic0` NIC
     is attached by default.
 
     1.  (Optional) Click **Create NIC** to create additional NICs.
@@ -50,7 +50,7 @@ must select one as the **Bootable Disk**.
         created.
 
 5.  Click **Next** to progress to the
-    [**Storage**](#storage-wizard-fields-web) screen.
+    [**Storage**](#storage-fields) screen.
 
     1.  (Optional) Click **Create Disk** to create additional disks.
         These disks can be removed by clicking the ⋮ button and
@@ -420,7 +420,7 @@ console.
 4.  Click **Create NIC** to create a new slot in the list.
 
 5.  Fill in the **NAME**, **NETWORK**, **MAC ADDRESS**, and **BINDING
-    METHOD** [details](#networking-wizard-fields-web) for the new NIC.
+    METHOD** [details](#networking-fields) for the new NIC.
 
 6.  Click the ✓ button to save and attach the NIC to the virtual
     machine.
@@ -463,7 +463,7 @@ web console.
 4.  Click **Create Disk** to create a new slot in the list.
 
 5.  Fill in the **NAME**, **SIZE**, and optional **STORAGE CLASS**
-    [details](#storage-wizard-fields-web) for the new disk.
+    [details](#storage-fields) for the new disk.
 
 6.  Click the ✓ button to save and attach the disk to the virtual
     machine.
@@ -499,8 +499,8 @@ machines](#creating-vm-wizard-web).
 
 The web console features an interactive wizard that guides you through
 [**Basic Settings**](#template-wizard-fields-web),
-[**Networking**](#networking-wizard-fields-web), and
-[**Storage**](#storage-wizard-fields-web) screens to simplify the
+[**Networking**](#networking-fields), and
+[**Storage**](#storage-fields) screens to simplify the
 process of creating virtual machine templates. All required fields are
 marked with a `*`. The wizard prevents you from moving to the next
 screen until the required fields have been completed.
@@ -530,7 +530,7 @@ must select one as the **Bootable Disk**.
     Settings**](#template-wizard-fields-web).
 
 4.  Click **Next** to progress to the
-    [**Networking**](#networking-wizard-fields-web) screen. An `nic0`
+    [**Networking**](#networking-fields) screen. An `nic0`
     NIC is attached by default.
 
     1.  (Optional) Click **Create NIC** to create additional NICs.
@@ -542,7 +542,7 @@ must select one as the **Bootable Disk**.
         created.
 
 5.  Click **Next** to progress to the
-    [**Storage**](#storage-wizard-fields-web) screen.
+    [**Storage**](#storage-fields) screen.
 
     1.  (Optional) Click **Create Disk** to create additional disks.
         These disks can be removed by clicking the ⋮ button and
